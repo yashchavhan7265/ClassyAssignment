@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -27,19 +29,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'first_name' => 'required|unique:users|min:3',
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'bail|required|unique:users|min:3',
             'last_name' => 'required|unique:users|min:3',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
+        }
 
         $user = new User;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->save();
 
+
         return response()->json([
             'result' => 'User Registered Successfully',
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -65,19 +73,23 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'first_name' => 'min:3',
             'last_name' => 'min:3',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
+        }
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->save();
 
         return response()->json([
-            'result' => 'User updated Successfully',
-        ], 200);
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -91,6 +103,6 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

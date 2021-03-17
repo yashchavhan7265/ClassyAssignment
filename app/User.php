@@ -5,13 +5,16 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use phpDocumentor\Reflection\Types\This;
 
 class User extends Model
 {
     use Notifiable, SoftDeletes;
 
     protected $table = 'users';
+
+    protected $fillable = [
+        'id', 'first_name', 'last_name'
+    ];
 
     protected $visible = [
         'first_name', 'last_name', 'full_name'

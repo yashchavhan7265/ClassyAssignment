@@ -21,7 +21,7 @@ class UserAddress extends Migration
             $table->string('address2');
             $table->string('city');
             $table->string('state');
-            $table->integer('zip');
+            $table->string('zip');
             $table->string('country');
             $table->timestamps();
         });

@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Address;
 use Illuminate\Support\ServiceProvider;
+use App\User;
+use App\Observers\ModelObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        User::observe(new \App\Observers\ModelObserver);
+        Address::observe(new \App\Observers\ModelObserver);
     }
 
     /**
